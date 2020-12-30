@@ -1,4 +1,4 @@
-# Films &middot; [![Build Status](https://travis-ci.org/opaulomonteiro/films.svg?branch=main)](https://travis-ci.com/opaulomonteiro/films)
+# Films &middot; [![Build Status](https://travis-ci.com/opaulomonteiro/films.svg?branch=main)](https://travis-ci.com/opaulomonteiro/films)
 
 This is a pet project that used Spring Boot, gradle, groovy and h2 for in memory database
 
