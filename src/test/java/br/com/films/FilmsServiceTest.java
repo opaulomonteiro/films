@@ -46,7 +46,7 @@ public class FilmsServiceTest {
 
         assertEquals(
                 producerAwards.getMax(),
-                Collections.singletonList(new ProducerAwardResponse("Buzz Feitshans", 8, 1994, 2002))
+                Collections.singletonList(new ProducerAwardResponse("Buzz Feitshans", 9, 1985, 1994))
         );
     }
 

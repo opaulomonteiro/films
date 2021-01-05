@@ -34,6 +34,6 @@ public class ProducerControllerTest {
 
         String content = result.getResponse().getContentAsString();
 
-        Assertions.assertEquals("{\"min\":[{\"producer\":\"Matthew Vaughn\",\"interval\":1,\"previousWin\":2002,\"followingWin\":2003}],\"max\":[{\"producer\":\"Buzz Feitshans\",\"interval\":9,\"previousWin\":1985,\"followingWin\":1994}]}", content);
+        Assertions.assertEquals("{\"min\":[{\"producer\":\"Joel Silver\",\"interval\":1,\"previousWin\":1990,\"followingWin\":1991}],\"max\":[{\"producer\":\"Matthew Vaughn\",\"interval\":22,\"previousWin\":2015,\"followingWin\":2037}]}", content);
     }
 }

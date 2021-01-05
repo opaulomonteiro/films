@@ -7,9 +7,7 @@ import br.com.films.exception.FilmsNotFoundException;
 import br.com.films.repository.FilmEntity;
 import br.com.films.repository.FilmsRepository;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
@@ -35,23 +33,27 @@ public class FilmsService {
     }
 
     private List<ProducerAward> getListOfProducersFromFilms(List<FilmEntity> filmEntities) {
-        return filmEntities
+        List<FilmEntity> winningFilms = filmEntities
                 .stream()
                 .filter(FilmEntity::isWinner)
-                .map(filmEntity -> {
-                    String producerName = filmEntity.getProducers().stream().findFirst().orElse("DEFAULT_AUTHOR");
-                    return new ProducerAward(
-                            producerName.trim(),
-                            parseInt(filmEntity.getYear()),
-                            filmEntity.getTitle());
-                }).collect(Collectors.toList());
+                .collect(Collectors.toList());
+
+        List<ProducerAward> producerAwards = new ArrayList<>();
+
+        winningFilms.forEach(filmEntity ->
+                filmEntity.getProducers().forEach(producerName ->
+                        producerAwards.add(new ProducerAward(producerName.trim(), parseInt(filmEntity.getYear()), filmEntity.getTitle())
+                        )));
+        return producerAwards;
     }
 
     private ProducerIntervalAwards getProducersIntervalAwards(Map<String, List<ProducerAward>> producersWithAwards) {
         List<ProducerAwardResponse> awardResponses = producersWithAwards.values()
                 .stream()
                 .filter(producerAwards -> producerAwards.size() > 1)
-                .map(this::getProducerAwardResponse).collect(Collectors.toList());
+                .map(this::getProducerAwardResponse)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         ProducerAwardResponse minProducerInterval = awardResponses.stream().min(Comparator.comparing(ProducerAwardResponse::getInterval)).get();
         ProducerAwardResponse maxProducerInterval = awardResponses.stream().max(Comparator.comparing(ProducerAwardResponse::getInterval)).get();
@@ -70,7 +72,8 @@ public class FilmsService {
         return new ProducerIntervalAwards(minIntervalAwards, maxIntervalAwards);
     }
 
-    private ProducerAwardResponse getProducerAwardResponse(List<ProducerAward> producerAwards) {
+    private List<ProducerAwardResponse> getProducerAwardResponse(List<ProducerAward> producerAwards) {
+        List<ProducerAwardResponse> awardResponses = new ArrayList<>();
         int iterator = 0;
         int interval = 0;
         int previousWin = 0;
@@ -83,14 +86,18 @@ public class FilmsService {
                 followingWin = producerAward.getYear();
                 interval = producerAward.getYear() - previousWin;
             }
+            if (interval != 0) {
+                awardResponses.add(
+                        new ProducerAwardResponse(
+                                producerAwards.stream().findFirst().get().getName(),
+                                interval,
+                                previousWin,
+                                followingWin
+                        ));
+            }
             if (iterator < (producerAwards.size() - 1)) previousWin = producerAward.getYear();
             iterator++;
         }
-        return new ProducerAwardResponse(
-                producerAwards.stream().findFirst().get().getName(),
-                interval,
-                previousWin,
-                followingWin
-        );
+        return awardResponses;
     }
 }
