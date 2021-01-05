@@ -1,4 +1,4 @@
-language: groovy
+language: java
 
 script:
   - ./gradlew clean build

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/opaulomonteiro/films.svg?branch=main)](https://travis-ci.com/opaulomonteiro/films)
 
-This is a pet project that used Spring Boot, Gradle, Groovy and H2 for in memory database
+This is a pet project that used Spring Boot, Gradle, Java and H2 for in memory database
 
 ### Run Project
 
