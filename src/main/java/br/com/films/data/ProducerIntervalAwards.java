@@ -1,27 +1,30 @@
 package br.com.films.data;
 
-public class ProducerIntervalAwards {
-    ProducerAwardResponse min;
-    ProducerAwardResponse max;
+import java.util.List;
 
-    public ProducerIntervalAwards(ProducerAwardResponse min, ProducerAwardResponse max) {
+public class ProducerIntervalAwards {
+
+    private List<ProducerAwardResponse> min;
+    private List<ProducerAwardResponse> max;
+
+    public ProducerIntervalAwards(List<ProducerAwardResponse> min, List<ProducerAwardResponse> max) {
         this.min = min;
         this.max = max;
     }
 
-    public ProducerAwardResponse getMin() {
+    public List<ProducerAwardResponse> getMin() {
         return min;
     }
 
-    public void setMin(ProducerAwardResponse min) {
+    public void setMin(List<ProducerAwardResponse> min) {
         this.min = min;
     }
 
-    public ProducerAwardResponse getMax() {
+    public List<ProducerAwardResponse> getMax() {
         return max;
     }
 
-    public void setMax(ProducerAwardResponse max) {
+    public void setMax(List<ProducerAwardResponse> max) {
         this.max = max;
     }
 }

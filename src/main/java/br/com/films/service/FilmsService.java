@@ -51,33 +51,46 @@ public class FilmsService {
         List<ProducerAwardResponse> awardResponses = producersWithAwards.values()
                 .stream()
                 .filter(producerAwards -> producerAwards.size() > 1)
-                .map(producerAwards -> {
-                    int iterator = 0;
-                    int interval = 0;
-                    int previousWin = 0;
-                    int followingWin = 0;
-                    for (ProducerAward producerAward : producerAwards) {
-                        if (previousWin == 0) previousWin = producerAward.getYear();
-                        if (followingWin == 0) followingWin = producerAward.getYear();
-                        if (interval == 0) interval = producerAward.getYear() - previousWin;
-                        if (producerAward.getYear() > previousWin) {
-                            followingWin = producerAward.getYear();
-                            interval = producerAward.getYear() - previousWin;
-                        }
-                        if (iterator < (producerAwards.size() - 1)) previousWin = producerAward.getYear();
-                        iterator++;
-                    }
-                    return new ProducerAwardResponse(
-                            producerAwards.stream().findFirst().get().getName(),
-                            interval,
-                            previousWin,
-                            followingWin
-                    );
-                }).collect(Collectors.toList());
+                .map(this::getProducerAwardResponse).collect(Collectors.toList());
 
-        return new ProducerIntervalAwards(
-                awardResponses.stream().min(Comparator.comparing(ProducerAwardResponse::getInterval)).get(),
-                awardResponses.stream().max(Comparator.comparing(ProducerAwardResponse::getInterval)).get()
+        ProducerAwardResponse minProducerInterval = awardResponses.stream().min(Comparator.comparing(ProducerAwardResponse::getInterval)).get();
+        ProducerAwardResponse maxProducerInterval = awardResponses.stream().max(Comparator.comparing(ProducerAwardResponse::getInterval)).get();
+
+        List<ProducerAwardResponse> minIntervalAwards = awardResponses
+                .stream()
+                .filter(it -> it.getInterval().equals(minProducerInterval.getInterval()))
+                .collect(Collectors.toList());
+
+
+        List<ProducerAwardResponse> maxIntervalAwards = awardResponses
+                .stream()
+                .filter(it -> it.getInterval().equals(maxProducerInterval.getInterval()))
+                .collect(Collectors.toList());
+
+        return new ProducerIntervalAwards(minIntervalAwards, maxIntervalAwards);
+    }
+
+    private ProducerAwardResponse getProducerAwardResponse(List<ProducerAward> producerAwards) {
+        int iterator = 0;
+        int interval = 0;
+        int previousWin = 0;
+        int followingWin = 0;
+        for (ProducerAward producerAward : producerAwards) {
+            if (previousWin == 0) previousWin = producerAward.getYear();
+            if (followingWin == 0) followingWin = producerAward.getYear();
+            if (interval == 0) interval = producerAward.getYear() - previousWin;
+            if (producerAward.getYear() > previousWin) {
+                followingWin = producerAward.getYear();
+                interval = producerAward.getYear() - previousWin;
+            }
+            if (iterator < (producerAwards.size() - 1)) previousWin = producerAward.getYear();
+            iterator++;
+        }
+        return new ProducerAwardResponse(
+                producerAwards.stream().findFirst().get().getName(),
+                interval,
+                previousWin,
+                followingWin
         );
     }
 }

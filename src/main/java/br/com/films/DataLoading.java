@@ -41,7 +41,7 @@ public class DataLoading {
                 film.setTitle(it.get("title"));
                 film.setStudios(Arrays.asList(it.get("studios").split(",")));
                 film.setProducers(getProducers(it));
-                film.setWinner(parseBoolean(it.get("winner")));
+                film.setWinner(it.get("winner").equalsIgnoreCase("yes"));
                 return film;
             }).collect(Collectors.toList());
 

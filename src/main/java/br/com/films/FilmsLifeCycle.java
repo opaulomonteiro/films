@@ -2,7 +2,7 @@ package br.com.films;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,8 @@ public class FilmsLifeCycle {
     }
 
 
-    @EventListener
-    public void handleContextStart(ContextStartedEvent contextStartedEvent) {
+    @EventListener(classes = {ContextRefreshedEvent.class})
+    public void handleContextStart() {
         logger.info("Loading Data into database");
         try {
             dataLoading.execute();

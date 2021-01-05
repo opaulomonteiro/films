@@ -1,6 +1,6 @@
 package br.com.films;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ public class ProducerControllerTest {
     private MockMvc mvc;
 
     @Test
-    @Ignore
     public void shouldReturnProducerIntervalAwardsInfos() throws Exception {
         MvcResult result = mvc.perform(get("/producers/awards")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -35,7 +34,6 @@ public class ProducerControllerTest {
 
         String content = result.getResponse().getContentAsString();
 
-        //content == '{"min":{"producer":"Joel Silver","interval":1,"previousWin":1990,"followingWin":1991},"max":{"producer":"Matthew Vaughn","interval":13,"previousWin":2002,"followingWin":2015}}'
+        Assertions.assertEquals("{\"min\":[{\"producer\":\"Matthew Vaughn\",\"interval\":1,\"previousWin\":2002,\"followingWin\":2003}],\"max\":[{\"producer\":\"Buzz Feitshans\",\"interval\":9,\"previousWin\":1985,\"followingWin\":1994}]}", content);
     }
-
 }

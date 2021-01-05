@@ -1,9 +1,12 @@
 package br.com.films;
 
+import br.com.films.data.ProducerAwardResponse;
+import br.com.films.data.ProducerIntervalAwards;
+import br.com.films.exception.FilmsNotFoundException;
 import br.com.films.repository.FilmEntity;
 import br.com.films.repository.FilmsRepository;
 import br.com.films.service.FilmsService;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,7 +15,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Ignore
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
 public class FilmsServiceTest {
 
     private FilmsRepository filmsRepository;
@@ -27,30 +32,30 @@ public class FilmsServiceTest {
 
     @Test
     public void shouldReturnProducerIntervalAwardsCorrectly() {
-//        when(filmsRepository.getFilms()).thenReturn(mockFilms());
-//
-//        ProducerIntervalAwards teste = filmsService.getProducerAwards();
-//
-//        assertThat(teste.getMin(), new ProducerAwardResponse("Bo Derek", 6, 1984, 1990));
-//
-//        (new ProducerAwardResponse("Buzz Feitshans", 8, 1994, 2002),
-//                teste.getMax()
-//        );
+        when(filmsRepository.getFilms()).thenReturn(mockFilms());
+
+        ProducerIntervalAwards producerAwards = filmsService.getProducerAwards();
+
+        assertEquals(
+                producerAwards.getMin(),
+                Arrays.asList(
+                        new ProducerAwardResponse("Gerald R. Molen", 6, 1984, 1990),
+                        new ProducerAwardResponse("Bo Derek", 6, 1984, 1990)
+                )
+        );
+
+        assertEquals(
+                producerAwards.getMax(),
+                Collections.singletonList(new ProducerAwardResponse("Buzz Feitshans", 8, 1994, 2002))
+        );
     }
 
-//    def "should throw FilmsNotFoundException when data base is empty"()
-//
-//    {
-//        given:
-//        filmsRepository.getFilms() >> []
-//
-//        when:
-//        filmsService.getProducerAwards()
-//
-//        then:
-//        Exception ex = thrown(FilmsNotFoundException)
-//        ex.message == 'Films database is empty'
-//    }
+    @Test
+    public void shouldThrowFilmsNotFoundExceptionWhenDataBaseIsEmpty() {
+        when(filmsRepository.getFilms()).thenReturn(Collections.emptyList());
+
+        Assertions.assertThrows(FilmsNotFoundException.class, () -> filmsService.getProducerAwards());
+    }
 
     private List<FilmEntity> mockFilms() {
         return Arrays.asList(
@@ -95,9 +100,25 @@ public class FilmsServiceTest {
                         true
                 ),
                 new FilmEntity(
-                        4,
-                        "1994",
+                        6,
+                        "1984",
                         "Robocop",
+                        Collections.singletonList("Universal Pictures"),
+                        Collections.singletonList("Gerald R. Molen"),
+                        true
+                ),
+                new FilmEntity(
+                        7,
+                        "1990",
+                        "Filmaker",
+                        Collections.singletonList("Universal Pictures"),
+                        Collections.singletonList("Gerald R. Molen"),
+                        true
+                ),
+                new FilmEntity(
+                        8,
+                        "1990",
+                        "Fail Movie",
                         Collections.singletonList("Universal Pictures"),
                         Collections.singletonList("Gerald R. Molen"),
                         false
